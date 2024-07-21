@@ -1,4 +1,4 @@
-CREATE USER 'master'@'%' IDENTIFIED BY 'master';
+CREATE USER IF NOT EXISTS 'master'@'%' IDENTIFIED BY 'master';
 GRANT ALL PRIVILEGES ON *.* TO 'master'@'%';
 FLUSH PRIVILEGES;
 
