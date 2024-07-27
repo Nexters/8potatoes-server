@@ -1,13 +1,15 @@
 server:
   port: 8099
+
 spring:
-  r2dbc:
-    url: r2dbc:mysql://localhost:3307/reststop?serverTimezone=Asia/Seoul
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/reststop?serverTimezone=Asia/Seoul
     username: master
     password: master
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
 api:
   base:
