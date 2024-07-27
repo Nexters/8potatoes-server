@@ -1,10 +1,12 @@
 package com.eightpotatoes.nexters.entity
 
-import org.springframework.data.annotation.Id
-import org.springframework.data.relational.core.mapping.Table
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
+import jakarta.persistence.Id
 
-@Table("ReststopBrand")
-data class ReststopBrand(
+@Table(name = "rest_stop_brand")
+@Entity
+class ReststopBrand(
     @Id val id: Int,
     val reststopId: Int,
     val brandId: Int,
