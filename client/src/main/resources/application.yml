@@ -2,4 +2,5 @@ spring:
   profiles:
     include: common
 server:
-  port: 8097
+  port: 8099
+

@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/reststop?serverTimezone=Asia/Seoul
+    username: master
+    password: master
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+api:
+  base:
+    url: https://data.ex.co.kr
+  key: 3951846914
