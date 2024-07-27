@@ -1,14 +1,18 @@
-version: '3'
 services:
   db:
     image: mysql:8.0.28
+    platform: linux/amd64
     container_name: 8potatoes-mysql-container
     environment:
-      MYSQL_USER: 'master'
       MYSQL_ROOT_PASSWORD: 'master'
-      MYSQL_DATABASE: restarea
+      MYSQL_DATABASE: reststop
+      MYSQL_USER: 'master'
+      MYSQL_PASSWORD: 'master'
       TZ: 'Asia/Seoul'
     ports:
       - "3307:3306"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
     volumes:
       - ./db/mysql/init:/docker-entrypoint-initdb.d
