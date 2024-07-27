@@ -1,5 +1,9 @@
 package com.eightpotatoes.nexters.client.menu
 
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -7,36 +11,36 @@ import org.springframework.web.reactive.function.client.WebClient
 
 @Service
 class ReststopFoodService(
-    @Value("\${api.base.url}") private val baseUrl: String,
     @Value("\${api.key}") private val apiKey: String,
     private val menuService: MenuService,
+    private val webClient: WebClient,
 ) {
-    private val webClient: WebClient = WebClient.builder()
-        .baseUrl(baseUrl)
-        .defaultHeader("User-Agent", "Mozilla/5.0")
-        .build()
-
-    suspend fun callAndUpsertAllFoodPages(): List<ReststopFoodResponse> {
-
+    suspend fun callAndUpsertAllFoodPages() = coroutineScope {
         val responses = mutableListOf<ReststopFoodResponse>()
         var page = 1
+        val jobs = mutableListOf<Job>()
 
         while (true) {
             val response = callOpenAPIReststopFood(page)
             if (response.list.isEmpty()) {
                 break
             }
-            response.list.let { items ->
-                items.map { item -> item.toMenu() }
-                    .forEach { menu ->
+            response.list.map { item -> item.toMenu() }.forEach { menu ->
+                jobs += launch {
+                    try {
                         menuService.upsertMenu(menu)
+                    } catch (e: Exception) {
+                        // Log error and handle it appropriately
+                        println("Failed to upsert menu: ${e.message}")
                     }
+                }
             }
             responses.add(response)
             page++
         }
 
-        return responses
+        jobs.joinAll() // 모든 작업이 완료될 때까지 대기
+        responses
     }
 
     private suspend fun callOpenAPIReststopFood(pageNo: Int): ReststopFoodResponse {

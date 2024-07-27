@@ -7,8 +7,8 @@ import java.time.LocalDateTime
 
 @MappedSuperclass
 open class BaseDateTimeEntity {
-    private var createdAt: LocalDateTime? = null
-    private var modifiedAt: LocalDateTime? = null
+    var createdAt: LocalDateTime? = null
+    var modifiedAt: LocalDateTime? = null
 
     @PrePersist
     fun onPersist() {

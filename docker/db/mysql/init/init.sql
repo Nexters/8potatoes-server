@@ -8,16 +8,17 @@ USE reststop;
 
 CREATE TABLE menu (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    food_seq VARCHAR(255) NOT NULL UNIQUE,
+    food_seq VARCHAR(255),
+    reststop_id INT,
     name VARCHAR(255) NOT NULL,
     price INT,
     description TEXT,
     is_recommended BOOLEAN,
     is_premium BOOLEAN,
     is_best_food BOOLEAN,
-    reststop_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY (reststop_id, name)
 );
 
 CREATE TABLE brand (
