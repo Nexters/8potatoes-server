@@ -9,6 +9,6 @@ class MenuService(
     private val menuRepository: MenuRepository
 ) {
     suspend fun upsertMenu(menu: Menu): Menu {
-        return menuRepository.upsertMenu(menu)
+        return menuRepository.save(menu)
     }
 }

@@ -1,13 +1,15 @@
 package com.eightpotatoes.nexters.entity
 
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
+import jakarta.persistence.Id
 import org.springframework.data.annotation.CreatedDate
-import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.LastModifiedDate
-import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
-@Table("Menu")
-data class Menu(
+@Table(name = "menu")
+@Entity
+class Menu(
     @Id val id: Int,
     val foodSeq: String,
     val name: String,

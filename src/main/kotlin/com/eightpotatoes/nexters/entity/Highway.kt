@@ -1,10 +1,12 @@
 package com.eightpotatoes.nexters.entity
 
-import org.springframework.data.annotation.Id
-import org.springframework.data.relational.core.mapping.Table
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
+import jakarta.persistence.Id
 
-@Table("Highway")
-data class Highway(
+@Table(name = "highway")
+@Entity
+class Highway(
     @Id val id: Int,
     val name: String,
 )
