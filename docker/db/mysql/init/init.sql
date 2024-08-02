@@ -34,3 +34,27 @@ CREATE TABLE brand (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+CREATE TABLE rest_stop (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    road_kind VARCHAR(255),
+    road_route_no VARCHAR(255),
+    road_route_name VARCHAR(255),
+    road_route_direction VARCHAR(255),
+    reststop_type VARCHAR(255),
+    latitude FLOAT,
+    longitude FLOAT,
+    open_time VARCHAR(255),
+    close_time VARCHAR(255),
+    phone_number VARCHAR(255),
+    has_gas_station BOOLEAN,
+    has_lpg_charging_station BOOLEAN,
+    has_electric_charging_station BOOLEAN,
+    has_pharmacy BOOLEAN,
+    has_restaurant BOOLEAN,
+    has_nursing_room BOOLEAN,
+    has_toilet BOOLEAN,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
