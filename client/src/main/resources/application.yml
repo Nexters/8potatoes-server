@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    include: common
+server:
+  port: 8099
+
