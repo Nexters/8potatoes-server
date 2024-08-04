@@ -15,5 +15,5 @@ class Menu(
     val isRecommended: Boolean,
     val isPremium: Boolean,
     val isBestFood: Boolean,
-    val reststopId: Int,
+    val reststopId: String,
 ) : BaseDateTimeEntity()

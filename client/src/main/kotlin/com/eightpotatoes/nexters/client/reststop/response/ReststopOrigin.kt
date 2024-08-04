@@ -1,9 +1,10 @@
 package com.eightpotatoes.nexters.client.reststop.response
 
 import com.eightpotatoes.nexters.core.entity.Reststop
+import com.eightpotatoes.nexters.core.util.ReststopUtils
 
 data class ReststopOrigin(
-    private val entrpsNm : String? = null,
+    private var entrpsNm : String? = null,
     private val roadKnd : String? = null,
     private val roadRouteNo : String? = null,
     private val roadRouteNm : String? = null,
@@ -34,12 +35,20 @@ data class ReststopOrigin(
 ) {
 
     fun toReststop(): Reststop {
+        var destinationDirection = ""
+
+        if (entrpsNm != null) {
+            val (processedName, extractDirection) = ReststopUtils.processReststopName(entrpsNm!!)
+            entrpsNm = processedName
+            destinationDirection = extractDirection
+        }
         return Reststop(
                 name = entrpsNm ?: "",
                 roadKind = roadKnd ?: "",
                 roadRouteNo = roadRouteNo ?: "",
                 roadRouteName = roadRouteNm ?: "",
                 roadRouteDirection = roadRouteDrc ?: "",
+                destinationDirection = destinationDirection,
                 reststopType = restAreaType ?: "",
                 latitude = latitude!!.toFloat(),
                 longitude = longitude!!.toFloat(),

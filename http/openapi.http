@@ -4,3 +4,14 @@ POST http://localhost:8097/batch/reststop/foods
 ### 브랜드 데이터 Upsert(w/OpenAPI)
 GET http://localhost:8099/full-import/brands
 
+### 휴게소 데이터 import(w/OpenAPI)
+POST http://localhost:8097/batch/reststops
+
+### 휴게소 코드 데이터 import(w/OpenAPI)
+POST http://localhost:8097/batch/reststops/code
+
+### 휴게소 주유소 정보 import(w/OpenAPI)
+POST http://localhost:8097/batch/reststops/oil
+
+### 휴게소 평점 정보 import (w/스크래핑)
+POST http://localhost:8097/batch/reststops/rating
