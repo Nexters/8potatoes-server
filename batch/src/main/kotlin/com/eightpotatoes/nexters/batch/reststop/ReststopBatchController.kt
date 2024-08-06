@@ -8,14 +8,10 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class ReststopBatchController(private val reststopService: ReststopService) {
 
+    // 휴게소 정보 업데이트 Batch
     @PostMapping("/batch/reststops")
-    suspend fun upsertReststops() = coroutineScope {
-        reststopService.fullImportReststop()
-    }
-
-    @PostMapping("/batch/reststops/code")
-    suspend fun updateReststopsCode() = coroutineScope {
-        reststopService.importReststopServiceCode()
+    suspend fun upsertReststopsInfo() = coroutineScope {
+        reststopService.fullImportReststopInfo()
     }
 
     @PostMapping("/batch/reststops/oil")

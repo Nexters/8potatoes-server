@@ -6,7 +6,7 @@ spring:
     password: master
   mvc:
     async:
-      request-timeout: 600000 # 10 minutes
+      request-timeout: 1200000 # 20 minutes
   jpa:
     hibernate:
       ddl-auto: none
