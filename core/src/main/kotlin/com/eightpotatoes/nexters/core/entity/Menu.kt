@@ -7,7 +7,7 @@ import jakarta.persistence.*
 class Menu(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    val id: Int = 0,
     val foodSeq: String,
     val name: String,
     val price: Int,
@@ -15,5 +15,5 @@ class Menu(
     val isRecommended: Boolean,
     val isPremium: Boolean,
     val isBestFood: Boolean,
-    val reststopId: String,
+    val reststopCode: String,
 ) : BaseDateTimeEntity()

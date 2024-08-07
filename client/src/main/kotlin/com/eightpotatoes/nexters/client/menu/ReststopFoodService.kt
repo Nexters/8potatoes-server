@@ -1,5 +1,6 @@
 package com.eightpotatoes.nexters.client.menu
 
+import com.eightpotatoes.nexters.client.menu.response.ReststopFoodResponse
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
