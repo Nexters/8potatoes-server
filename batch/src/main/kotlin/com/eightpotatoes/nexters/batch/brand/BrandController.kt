@@ -1,12 +1,13 @@
-package com.eightpotatoes.nexters.client.brand
+package com.eightpotatoes.nexters.batch.brand
 
-import org.springframework.web.bind.annotation.GetMapping
+import com.eightpotatoes.nexters.client.brand.BrandService
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class BrandController(val brandService: BrandService) {
 
-    @GetMapping(value = ["/full-import/brands"])
+    @PostMapping("/batch/brands/info")
     suspend fun fullImportBrand() {
         brandService.fullImportBrand()
     }

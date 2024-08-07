@@ -1,4 +1,4 @@
-package com.eightpotatoes.nexters.client.brand
+package com.eightpotatoes.nexters.client.brand.response
 
 import com.eightpotatoes.nexters.core.entity.Brand
 
@@ -25,8 +25,8 @@ data class BrandOrigin(
                 brandCode = brdCode ?: "",
                 name = brdName ?: "",
                 description = brdDesc ?: "",
-                restStopCode = stdRestCd ?: "",
-                restStopName = stdRestNm ?: "",
+                reststopCode = stdRestCd ?: "",
+                reststopName = stdRestNm ?: "",
                 routeName = routeNm ?: "",
                 address = svarAddr ?: "",
                 thumbnailUrl = ""
