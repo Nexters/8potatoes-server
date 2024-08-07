@@ -14,80 +14,107 @@ class ReststopService(
 ) {
 
     @Transactional
-    suspend fun fullImportReststopInfo() {
-        // 휴게소 기준 정보 현황 Import
+    suspend fun fullImportReststopInfos() {
+        // 1) 전국 휴게소 정보 표준 데이터 import
+        val reststopStandardDataList = reststopClient.importReststopStandardData()
+        // 2) 노선별/방향별 편의 시설 현황(휴게소 key mapping)
         val reststopBaselineList = reststopClient.importReststopBaseline()
-        // 주차대수, 도로노선방향 정보 Import
-        val reststopParkingLotList = reststopClient.importReststopParkingLot()
-        // 주유소 가격 정보 Import
-        val gasStationOriginList = reststopClient.importReststopOilPrice()
-        // 전기차/수소차 충전소 정보 import
-        val chargingStationOriginList = reststopClient.importChargingStation()
+        // 3) 하이쉼 마루 (휴게소 key mapping)
+        val reststopAdditionalList = reststopClient.importReststopAdditional()
+        // 4) 주차장 정보
+        val parkingLotList = reststopClient.importParkingLot()
+        // 5) 주유소 정보
+        val reststopOilPriceList = reststopClient.importReststopOilPrice()
+        // 6) 충전소 정보
+        val chargingStationList = reststopClient.importChargingStation()
 
-        val parkingLotMap = reststopParkingLotList.associateBy { it.svarCd }
-        val gasStationMap = gasStationOriginList.associateBy { it.serviceAreaCode }
-        val chargingStationMap = chargingStationOriginList.associateBy { it.facilityName + it.facilityType }
+        val standardDataMap = reststopStandardDataList.associateBy { it.name + "휴게소" }
+        val baselineMap = reststopBaselineList.associateBy { it.name }
+        val additionalMap = reststopAdditionalList.associateBy { it.name }
+        val parkingLotMap = parkingLotList.associateBy { it.reststopName + "휴게소" }
+        val oilPriceMap =
+            reststopOilPriceList.associateBy { ReststopUtils.processGasStationName(it.serviceAreaName ?: "") }
+        val chargingStationMap = chargingStationList.associateBy { it.facilityName + it.facilityType }
 
-        // 데이터 조합
-        val reststopList = reststopBaselineList.mapNotNull { baseline ->
-            val standardCode = baseline.stdRestCd ?: return@mapNotNull null
-            val name = baseline.unitName ?: return@mapNotNull null
-            val routeName = baseline.routeName ?: return@mapNotNull null
-            val routeNo = baseline.routeNo ?: return@mapNotNull null
-            val longitude = baseline.xValue?.toFloatOrNull() ?: return@mapNotNull null
-            val latitude = baseline.yValue?.toFloatOrNull() ?: return@mapNotNull null
-            val serviceAreaCode = baseline.serviceAreaCode ?: return@mapNotNull null
-
-            val parkingLot = parkingLotMap[standardCode]
-            val gasStation = gasStationMap[serviceAreaCode]
-            val chargingStation = chargingStationMap[name]
-
-            Reststop(
-                standardCode = standardCode,
-                name = name,
-                code = baseline.unitCode ?: "",
-                routeName = routeName,
-                routeNo = routeNo,
-                longitude = longitude,
-                latitude = latitude,
-                serviceAreaCode = serviceAreaCode,
-                smallCarSpace = parkingLot?.cocrPrkgTrcn?.toIntOrNull() ?: 0,
-                largeCarSpace = parkingLot?.fscarPrkgTrcn?.toIntOrNull() ?: 0,
-                disabledPersonSpace = parkingLot?.dspnPrkgTrcn?.toIntOrNull() ?: 0,
-                routeDirection = gasStation?.direction ?: "",
-                gasolinePrice = gasStation?.gasolinePrice,
-                dieselPrice = gasStation?.diselPrice,
-                lpgPrice = gasStation?.lpgPrice,
-                address = gasStation?.svarAddr ?: "",
-                phoneNumber = parkingLot?.rprsTelNo ?: "",
-                hasElectricCharger = chargingStation?.electricChargingStation == "O",
-                hasHydrogenCharger = chargingStation?.hydrogenChargingStation == "O",
-                restaurantOpenTime = null,  // 추후 추가
-                naverRating = null,  // 추후 추가
-            )
-        }
-
-        reststopRepository.saveAll(reststopList)
-    }
-
-    @Transactional
-    suspend fun importReststopOilPrice() {
-        val gasStationOrigins = reststopClient.importReststopOilPrice()
-        if (gasStationOrigins.isEmpty()) return
-        gasStationOrigins
-            .mapNotNull { it.serviceAreaName?.let { name -> name to it } }
-            .forEach { (name, gasStationOrigin) ->
-                val processedName = ReststopUtils.processGasStationName(name)
-                reststopRepository.findByName(processedName)?.apply {
-                    gasStationOrigin.gasolinePrice?.let { gasolinePrice = it }
-                    gasStationOrigin.diselPrice?.let { dieselPrice = it }
-                    gasStationOrigin.lpgPrice?.let { lpgPrice = it }
-                    gasStationOrigin.svarAddr?.let { address = it }
-                    gasStationOrigin.telNo?.let { phoneNumber = it }
-                    reststopRepository.save(this)
+        standardDataMap.mapNotNull { (name, standardData) ->
+            name.let {
+                val processedName = if (name == "이천(하남)휴게소") {
+                    "이천쌀(하남)휴게소"
+                } else {
+                    name
                 }
+
+                val baseline = baselineMap[processedName]
+                val additional =
+                    additionalMap[processedName] // 울주(함양)휴게소, 울주(울산)휴게소, 통도사(부산)휴게소, 김해금관가야휴게소, 매송(목포)휴게소, 매송(서울)휴게소
+                val oilPrice = oilPriceMap[processedName]
+                val parkingLot = parkingLotMap[name] // 이천(하남)으로 표기
+                val chargingStation = chargingStationMap[processedName]
+
+                if (baseline == null && additional == null) return@let null
+
+                val reststop = Reststop(
+                    name = processedName,
+                    roadRouteNo = additional?.routeCd ?: baseline?.routeCode ?: "Unknown",
+                    roadRouteName = standardData.roadRouteName ?: "Unknown",
+                    roadRouteDirection = standardData.roadRouteDirection ?: "Unknown",
+                    latitude = standardData.latitude?.toFloatOrNull() ?: 0f,
+                    longitude = standardData.longitude?.toFloatOrNull() ?: 0f,
+                    phoneNumber = standardData.phoneNumber ?: "Unknown",
+                    referenceDate = standardData.referenceDate ?: "Unknown",
+                    representativeFoodName = standardData.representativeFoodName ?: "Unknown",
+                    reststopType = standardData.reststopType ?: "Unknown",
+                    standardCode = additional?.standardCode ?: baseline?.standardCode ?: "Unknown",
+                    serviceAreaCode = additional?.bsopAdtnlFcltCd ?: baseline?.serviceAreaCode ?: "Unknown",
+                    address = additional?.svarAddr ?: baseline?.svarAddr ?: "Unknown",
+                    smallCarSpace = parkingLot?.smallCarSpace,
+                    largeCarSpace = parkingLot?.largeCarSpace,
+                    disabledPersonSpace = parkingLot?.disabledPersonSpace,
+                    totalSpace = parkingLot?.totalSpace,
+                    gasolinePrice = oilPrice?.gasolinePrice,
+                    dieselPrice = oilPrice?.dieselPrice,
+                    lpgPrice = oilPrice?.lpgPrice,
+                    hasElectricCharger = chargingStation?.electricChargingStation == "O",
+                    hasHydrogenCharger = chargingStation?.hydrogenChargingStation == "O"
+                )
+                saveOrUpdateReststop(reststop)
             }
+        }
     }
+
+    private fun saveOrUpdateReststop(reststop: Reststop) {
+        val existingReststop = reststopRepository.findByStandardCode(reststop.standardCode)
+
+        if (existingReststop != null) {
+            existingReststop.apply {
+                name = reststop.name
+                roadRouteNo = reststop.roadRouteNo
+                roadRouteName = reststop.roadRouteName
+                roadRouteDirection = reststop.roadRouteDirection
+                latitude = reststop.latitude
+                longitude = reststop.longitude
+                phoneNumber = reststop.phoneNumber
+                referenceDate = reststop.referenceDate
+                representativeFoodName = reststop.representativeFoodName
+                reststopType = reststop.reststopType
+                serviceAreaCode = reststop.serviceAreaCode
+                address = reststop.address
+                smallCarSpace = reststop.smallCarSpace
+                largeCarSpace = reststop.largeCarSpace
+                disabledPersonSpace = reststop.disabledPersonSpace
+                totalSpace = reststop.totalSpace
+                gasolinePrice = reststop.gasolinePrice
+                dieselPrice = reststop.dieselPrice
+                lpgPrice = reststop.lpgPrice
+                hasElectricCharger = reststop.hasElectricCharger
+                hasHydrogenCharger = reststop.hasHydrogenCharger
+            }
+            reststopRepository.save(existingReststop)
+        } else {
+            reststopRepository.save(reststop)
+        }
+    }
+
 
     @Transactional
     suspend fun importNaverRating() {
@@ -105,4 +132,16 @@ class ReststopService(
         val randomValue = Random.nextInt(start, end + 1)
         return randomValue / 10.0f
     }
+
+    @Transactional
+    suspend fun updateRestaurantsHours() {
+        val reststops = reststopRepository.findAll()
+        reststops.forEach { reststop ->
+            // TODO restaurantOpenTime 계산 로직 추가
+            reststop.restaurantOpenTime = "07:00 ~ 23:30"
+            reststopRepository.save(reststop)
+        }
+    }
+
+
 }

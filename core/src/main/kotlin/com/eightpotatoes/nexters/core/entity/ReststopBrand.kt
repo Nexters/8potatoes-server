@@ -8,6 +8,6 @@ import jakarta.persistence.Id
 @Entity
 class ReststopBrand(
     @Id val id: Int,
-    val reststopId: Int,
+    val reststopCode: Int,
     val brandId: Int,
 )
