@@ -11,5 +11,4 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 @EnableTransactionManagement
 @EntityScan("com.eightpotatoes.nexters")
 @EnableJpaRepositories(basePackages = ["com.eightpotatoes.nexters"])
-class JpaAuditingConfiguration {
-}
+class JpaAuditingConfiguration

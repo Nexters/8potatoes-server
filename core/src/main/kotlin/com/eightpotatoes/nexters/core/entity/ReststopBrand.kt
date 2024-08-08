@@ -4,10 +4,10 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Table
 import jakarta.persistence.Id
 
-@Table(name = "rest_stop_brand")
+@Table(name = "reststop_brand")
 @Entity
 class ReststopBrand(
     @Id val id: Int,
-    val reststopId: Int,
+    val reststopCode: Int,
     val brandId: Int,
 )

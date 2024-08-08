@@ -1,5 +1,7 @@
 spring:
   profiles:
     include: common
+  codec:
+    max-in-memory-size: 16MB
 server:
   port: 8081

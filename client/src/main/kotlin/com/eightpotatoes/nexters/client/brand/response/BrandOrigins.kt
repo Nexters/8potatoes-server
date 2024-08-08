@@ -1,4 +1,4 @@
-package com.eightpotatoes.nexters.client.brand
+package com.eightpotatoes.nexters.client.brand.response
 
 data class BrandOrigins(
     val list: List<BrandOrigin>,

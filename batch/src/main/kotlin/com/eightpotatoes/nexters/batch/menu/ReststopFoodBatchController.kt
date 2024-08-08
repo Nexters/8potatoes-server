@@ -1,4 +1,4 @@
-package com.eightpotatoes.nexters.batch.controller
+package com.eightpotatoes.nexters.batch.menu
 
 import com.eightpotatoes.nexters.client.menu.ReststopFoodService
 import kotlinx.coroutines.coroutineScope
