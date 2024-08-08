@@ -8,3 +8,11 @@ dependencies {
     testImplementation("io.projectreactor:reactor-test")
     implementation(kotlin("stdlib"))
 }
+
+tasks.findByName("bootJar")?.apply {
+    enabled = false
+}
+
+tasks.findByName("jar")?.apply {
+    enabled = true
+}
