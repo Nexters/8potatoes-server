@@ -10,3 +10,11 @@ dependencies {
     // Jsoup dependency
     implementation("org.jsoup:jsoup:1.15.3")
 }
+
+tasks.findByName("bootJar")?.apply {
+    enabled = false
+}
+
+tasks.findByName("jar")?.apply {
+    enabled = true
+}

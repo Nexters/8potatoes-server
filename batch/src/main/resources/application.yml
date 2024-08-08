@@ -4,4 +4,4 @@ spring:
   codec:
     max-in-memory-size: 16MB
 server:
-  port: 8097
+  port: 8081

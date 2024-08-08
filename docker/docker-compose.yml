@@ -1,3 +1,4 @@
+version: '3'
 services:
   db:
     image: mysql:8.0.28
@@ -16,3 +17,41 @@ services:
       - --collation-server=utf8mb4_unicode_ci
     volumes:
       - ./db/mysql/init:/docker-entrypoint-initdb.d
+
+  batch-application:
+    container_name: 8potatoes-batch-application
+    image: batch-application:latest
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    environment:
+      TZ: Asia/Seoul
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3307/reststop?serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_USERNAME: master
+      SPRING_DATASOURCE_PASSWORD: master
+      SPRING_DATASOURCE_DRIVER: com.mysql.cj.jdbc.Driver
+      PORT: 8081
+      MODULE: batch
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+
+  external-api-application:
+    container_name: 8potatoes-external-api-application
+    image: external-api-application:latest
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    environment:
+      TZ: Asia/Seoul
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3307/reststop?serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_USERNAME: master
+      SPRING_DATASOURCE_PASSWORD: master
+      SPRING_DATASOURCE_DRIVER: com.mysql.cj.jdbc.Driver
+      PORT: 8082
+      MODULE: external-api
+    ports:
+      - "8082:8082"
+    depends_on:
+      - db

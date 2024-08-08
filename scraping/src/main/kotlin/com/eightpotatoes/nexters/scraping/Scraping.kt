@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 
-fun main() {
+fun scraping() {
     // URL 설정
     val url = "https://m.place.naver.com/place/13503807/home"
 
