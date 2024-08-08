@@ -2,6 +2,7 @@ package com.eightpotatoes.nexters.api.external.model
 
 data class ReststopDetailAtHighway(
     val name: String, // 휴게소 이름
+    val code: String, // 휴게소 코드
     val isOperating: Boolean, // 운영중
     val gasolinePrice: String?, // 휘발유 가격
     val dieselPrice: String?, // 경유 가격

@@ -1,5 +1,6 @@
 package com.eightpotatoes.nexters.core.entity
 
+import com.eightpotatoes.nexters.core.model.MenuCategory
 import jakarta.persistence.*
 
 @Table(name = "menu")
@@ -16,4 +17,6 @@ class Menu(
     val isPremium: Boolean,
     val isBestFood: Boolean,
     val reststopCode: String,
+    @Enumerated(EnumType.STRING)
+    var category: MenuCategory,
 ) : BaseDateTimeEntity()

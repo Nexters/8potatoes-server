@@ -19,14 +19,15 @@ open class MenuRepositoryCustomImpl : MenuRepositoryCustom {
         menu.modifiedAt = LocalDateTime.now()
 
         val sql = """
-            INSERT INTO menu (description, food_seq, is_best_food, is_premium, is_recommended, name, price, reststop_code, created_at, modified_at) 
-            VALUES (:description, :foodSeq, :isBestFood, :isPremium, :isRecommended, :name, :price, :reststopCode, :createdAt, :modifiedAt) 
+            INSERT INTO menu (description, food_seq, is_best_food, is_premium, is_recommended, name, price, category, reststop_code, created_at, modified_at) 
+            VALUES (:description, :foodSeq, :isBestFood, :isPremium, :isRecommended, :name, :price, :category, :reststopCode, :createdAt, :modifiedAt) 
             ON DUPLICATE KEY UPDATE 
             description = VALUES(description), 
             is_best_food = VALUES(is_best_food), 
             is_premium = VALUES(is_premium), 
             is_recommended = VALUES(is_recommended), 
             price = VALUES(price), 
+            category = VALUES(category),
             food_seq = VALUES(food_seq),
             modified_at = VALUES(modified_at)
         """
@@ -40,6 +41,7 @@ open class MenuRepositoryCustomImpl : MenuRepositoryCustom {
             setParameter("isRecommended", menu.isRecommended)
             setParameter("price", menu.price)
             setParameter("foodSeq", menu.foodSeq)
+            setParameter("category", menu.category.name)
             setParameter("createdAt", menu.createdAt)
             setParameter("modifiedAt", menu.modifiedAt)
         }

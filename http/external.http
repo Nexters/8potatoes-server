@@ -1,6 +1,9 @@
 ### 경로 내 휴게소 검색 API
 GET http://localhost:8098/api/highways/reststops?
-    from=37.3838&
-    to=35.3838&
+    from=37.3838,127.855&
+    to=35.1234,126.807&
     roadNames=경부선&중부선
+
+### 휴게소 상세 정보 조회 API
+GET http://localhost:8098/api/reststop/info?reststopCode=000013
 

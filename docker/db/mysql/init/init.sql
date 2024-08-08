@@ -22,6 +22,7 @@ CREATE TABLE menu
     is_recommended BOOLEAN,
     is_premium     BOOLEAN,
     is_best_food   BOOLEAN,
+    category       VARCHAR(255) COMMENT '카테고리 : 스낵/한식/양식/중식/아시안',
     created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modified_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY (reststop_code, name)

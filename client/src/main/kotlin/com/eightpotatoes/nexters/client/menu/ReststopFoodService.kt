@@ -1,6 +1,7 @@
 package com.eightpotatoes.nexters.client.menu
 
 import com.eightpotatoes.nexters.client.menu.response.ReststopFoodResponse
+import com.eightpotatoes.nexters.core.util.MenuUtils.getCategoryByName
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
@@ -29,6 +30,8 @@ class ReststopFoodService(
             response.list.map { item -> item.toMenu() }.forEach { menu ->
                 jobs += launch {
                     try {
+                        // menu 이름을 통해 카테고리 업데이트
+                        menu.category = getCategoryByName(menu.name)
                         menuService.upsertMenu(menu)
                     } catch (e: Exception) {
                         // Log error and handle it appropriately

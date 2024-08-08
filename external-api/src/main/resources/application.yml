@@ -3,3 +3,8 @@ spring:
     include: common
 server:
   port: 8098
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
