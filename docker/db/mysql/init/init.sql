@@ -74,3 +74,19 @@ CREATE TABLE reststop
     modified_at              TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 시간',
     UNIQUE KEY (standard_code)
 ) COMMENT='휴게소 정보';
+
+CREATE TABLE convenient_facility
+(
+    id            BIGINT AUTO_INCREMENT PRIMARY KEY,
+    standard_code VARCHAR(255) NOT NULL COMMENT '표준 휴게소/주유소 공통 코드',
+    name          VARCHAR(255) NOT NULL,
+    code          VARCHAR(255) NOT NULL,
+    description   VARCHAR(255) NOT NULL,
+    start_time     VARCHAR(255) NOT NULL,
+    end_time       VARCHAR(255) NOT NULL,
+    address       VARCHAR(255) NOT NULL,
+    route_code     VARCHAR(255),
+    route_name     VARCHAR(255),
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
