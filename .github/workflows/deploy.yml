@@ -1,0 +1,52 @@
+name: Build and Deploy to NCP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name:  Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Gradlew build
+        run: ./gradlew clean build -x test
+
+      - name: Log in to DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USER_NAME }}" --password-stdin
+
+      - name: Build and Push Batch Application Image
+        run: |
+          docker build -t ${{ secrets.DOCKER_REGISTRY }}/batch-application:${{ github.ref_name }} -f batch/Dockerfile .
+          docker push ${{ secrets.DOCKER_REGISTRY }}/batch-application:${{ github.ref_name }}
+
+      - name: Build and Push External API Application Image
+        run: |
+          docker build -t ${{ secrets.DOCKER_REGISTRY }}/external-api-application:${{ github.ref_name }} -f external-api/Dockerfile .
+          docker push ${{ secrets.DOCKER_REGISTRY }}/external-api-application:${{ github.ref_name }}
+
+      - name: Deploy to NCP server with SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.NCP_HOST }}
+          username: ${{ secrets.NCP_USERNAME }}
+          password: ${{ secrets.NCP_PASSWORD }}
+          port: ${{ secrets.NCP_PORT }}
+          script: |
+            cd /docker/docker-compose
+            docker-compose pull
+            docker-compose down || true
+            docker-compose up -d
