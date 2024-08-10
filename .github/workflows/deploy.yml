@@ -42,7 +42,7 @@ jobs:
       - name: Build and Push External API Application Image
         env:
           REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
-          IMAGE_NAME: external-api-application =
+          IMAGE_NAME: external-api-application
           BRANCH_NAME: ${{ github.ref_name }}
         run: |
           docker build -t ${{ secrets.DOCKER_REGISTRY }}/external-api-application:${{ github.ref_name }} -f ./Dockerfile .
