@@ -1,4 +1,4 @@
-package com.eightpotatoes.nexters.client.menu
+package com.eightpotatoes.nexters.client.menu.response
 
 import com.eightpotatoes.nexters.core.model.ReststopFood
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties

@@ -1,5 +1,6 @@
 package com.eightpotatoes.nexters.client.brand
 
+import com.eightpotatoes.nexters.client.brand.response.BrandOrigins
 import com.eightpotatoes.nexters.core.entity.Brand
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
@@ -10,7 +11,7 @@ import java.util.Collections.emptyList
 class BrandClient(val webClient: WebClient) {
 
     fun fullImportBrand(): List<Brand> {
-        var pageNo = 0
+        var pageNo = 1
         val brands = mutableListOf<Brand>()
 
         while (true) {

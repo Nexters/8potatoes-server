@@ -36,7 +36,8 @@ data class ReststopFood(
             isRecommended = recommendyn.equals("Y", ignoreCase = true),
             isPremium = premiumyn.equals("Y", ignoreCase = true),
             isBestFood = bestfoodyn.equals("Y", ignoreCase = true),
-            reststopId = stdRestCd.toIntOrNull() ?: 0
+            reststopCode = stdRestCd,
+            category = MenuCategory.UNKNOWN
         )
     }
 }

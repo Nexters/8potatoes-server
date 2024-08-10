@@ -15,8 +15,8 @@ class Brand(
     val brandCode: String,
     val name: String,
     val description: String,
-    val restStopCode: String,
-    val restStopName: String,
+    val reststopCode: String,
+    val reststopName: String,
     val routeName: String,
     val address: String,
     val thumbnailUrl: String
