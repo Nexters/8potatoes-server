@@ -35,7 +35,7 @@ jobs:
           IMAGE_NAME: batch-application
           BRANCH_NAME: ${{ github.ref_name }}
         run: |
-          docker build -t ${{ secrets.DOCKER_REGISTRY }}/batch-application:${{ github.ref_name }} -f batch/Dockerfile .
+          docker build -t ${{ secrets.DOCKER_REGISTRY }}/batch-application:${{ github.ref_name }}
           docker push ${{ secrets.DOCKER_REGISTRY }}/batch-application:${{ github.ref_name }}
 
       - name: Build and Push External API Application Image
@@ -44,7 +44,7 @@ jobs:
           IMAGE_NAME: external-api-application =
           BRANCH_NAME: ${{ github.ref_name }}
         run: |
-          docker build -t ${{ secrets.DOCKER_REGISTRY }}/external-api-application:${{ github.ref_name }} -f external-api/Dockerfile .
+          docker build -t ${{ secrets.DOCKER_REGISTRY }}/external-api-application:${{ github.ref_name }}
           docker push ${{ secrets.DOCKER_REGISTRY }}/external-api-application:${{ github.ref_name }}
 
       - name: Deploy to NCP server with SSH
