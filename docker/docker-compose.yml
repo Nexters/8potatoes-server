@@ -18,7 +18,7 @@ services:
       - ./db/mysql/init:/docker-entrypoint-initdb.d
 
   batch-application:
-    container_name: 8potatoes-server
+    container_name: eightpotatoes-batch-application
     image: jun108059/eightpotatoes-batch-application
     build:
       context: ../
@@ -37,7 +37,7 @@ services:
       - db
 
   external-api-application:
-    container_name: 8potatoes-server
+    container_name: eightpotatoes-external-api-application
     image: jun108059/eightpotatoes-external-api-application:latest
     build:
       context: ../
