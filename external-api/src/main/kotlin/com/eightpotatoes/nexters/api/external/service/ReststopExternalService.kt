@@ -1,10 +1,7 @@
 package com.eightpotatoes.nexters.api.external.service
 
 import com.eightpotatoes.nexters.api.external.mapper.ReststopMapper
-import com.eightpotatoes.nexters.api.external.model.BrandData
-import com.eightpotatoes.nexters.api.external.model.ReststopDetailAtHighway
-import com.eightpotatoes.nexters.api.external.model.ReststopDetailResponse
-import com.eightpotatoes.nexters.api.external.model.ReststopsAtHighway
+import com.eightpotatoes.nexters.api.external.model.*
 import com.eightpotatoes.nexters.core.repository.*
 import com.eightpotatoes.nexters.core.util.ReststopUtils.isRestaurantOpen
 import org.springframework.stereotype.Service
@@ -16,6 +13,7 @@ class ReststopExternalService(
     private val reststopRepository: ReststopRepository,
     private val menuRepository: MenuRepository,
     private val brandRepository: BrandRepository,
+    private val convenientFacilityRepository: ConvenientFacilityRepository,
 ) {
     fun getReststopsAtHighways(
         roadNameList: List<String>,
@@ -52,6 +50,14 @@ class ReststopExternalService(
                 brandLogoUrl = it.thumbnailUrl
             )
         }
-        return Flux.just(ReststopMapper.toReststopDetailResponse(reststop, menus, brands))
+        // 편의시설 조회
+        val amenities = convenientFacilityRepository.findByStandardCode(reststopCode).map {
+            AmenityData(
+                amenityName = it.name,
+                amenityLogoUrl = "TEST", // TODO 편의시설 image 링크 추가
+            )
+        }
+
+        return Flux.just(ReststopMapper.toReststopDetailResponse(reststop, menus, brands, amenities))
     }
 }

@@ -29,7 +29,8 @@ object ReststopMapper {
     fun toReststopDetailResponse(
         reststop: Reststop,
         menus: List<Menu>,
-        brands: List<BrandData>
+        brands: List<BrandData>,
+        amenities: List<AmenityData>,
     ): ReststopDetailResponse {
         return ReststopDetailResponse(
             name = reststop.name,
@@ -54,7 +55,7 @@ object ReststopMapper {
             reststopData = ReststopAdditionalData(
                 restaurantOperatingTimes = createRestaurantOperatingTimes(), // TODO 식당 영업시간 데이터 추가 후 작업
                 brands = brands,
-                amenities = createAmenities(), // TODO 편의시설 데이터 추가 후 작업
+                amenities = amenities,
                 address = reststop.address ?: "",
                 phoneNumber = reststop.phoneNumber,
             ),
@@ -66,26 +67,12 @@ object ReststopMapper {
     private fun createRestaurantOperatingTimes(): List<RestaurantInfo> {
         return listOf(
             RestaurantInfo(
-                restaurantName = "식당가 (라면/우동)",
+                restaurantName = "[TEST] 식당가 (라면/우동)",
                 operatingTime = "09:00 ~ 21:00"
             ),
             RestaurantInfo(
-                restaurantName = "달콤커피 커피전문점",
+                restaurantName = "[TEST] 달콤커피 커피전문점",
                 operatingTime = "08:00 ~ 22:00"
-            )
-        )
-    }
-
-    // Dummy 편의시설 데이터 리스트 생성
-    private fun createAmenities(): List<AmenityData> {
-        return listOf(
-            AmenityData(
-                amenityName = "화장실",
-                amenityLogoUrl = "https://github.com/user-attachments/assets/0f2a2a5b-33a5-4d89-bacb-9a4f55b935de"
-            ),
-            AmenityData(
-                amenityName = "ATM",
-                amenityLogoUrl = "https://github.com/user-attachments/assets/0f2a2a5b-33a5-4d89-bacb-9a4f55b935de"
             )
         )
     }
