@@ -16,6 +16,7 @@ services:
       - --collation-server=utf8mb4_unicode_ci
     volumes:
       - ./db/mysql/init:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
 
   batch-application:
     container_name: eightpotatoes-batch-application
@@ -25,7 +26,7 @@ services:
       dockerfile: Dockerfile
     environment:
       TZ: Asia/Seoul
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3307/reststop?serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/reststop?serverTimezone=Asia/Seoul
       SPRING_DATASOURCE_USERNAME: master
       SPRING_DATASOURCE_PASSWORD: master
       SPRING_DATASOURCE_DRIVER: com.mysql.cj.jdbc.Driver
@@ -44,7 +45,7 @@ services:
       dockerfile: Dockerfile
     environment:
       TZ: Asia/Seoul
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3307/reststop?serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/reststop?serverTimezone=Asia/Seoul
       SPRING_DATASOURCE_USERNAME: master
       SPRING_DATASOURCE_PASSWORD: master
       SPRING_DATASOURCE_DRIVER: com.mysql.cj.jdbc.Driver
@@ -54,3 +55,6 @@ services:
       - "8082:8082"
     depends_on:
       - db
+
+volumes:
+  mysql_data: # MySQL 데이터 저장소
