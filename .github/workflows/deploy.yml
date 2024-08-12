@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - ci-cd-test
 
 jobs:
   build:
@@ -53,6 +52,7 @@ jobs:
           password: ${{ secrets.NCP_PASSWORD }}
           port: ${{ secrets.NCP_PORT }}
           script: |
-            cd /root/8potatoes-server/docker/ 
+            cd /root/8potatoes-server/docker/
+            docker-compose down
             docker-compose pull
             docker-compose up -d
