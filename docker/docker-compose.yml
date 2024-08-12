@@ -19,7 +19,7 @@ services:
 
   batch-application:
     container_name: eightpotatoes-batch-application
-    image: jun108059/eightpotatoes-batch-application
+    image: jun108059/eightpotatoes-batch-application:main
     build:
       context: ../
       dockerfile: Dockerfile
@@ -38,7 +38,7 @@ services:
 
   external-api-application:
     container_name: eightpotatoes-external-api-application
-    image: jun108059/eightpotatoes-external-api-application:latest
+    image: jun108059/eightpotatoes-external-api-application:main
     build:
       context: ../
       dockerfile: Dockerfile
