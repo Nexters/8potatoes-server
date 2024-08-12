@@ -29,21 +29,24 @@ jobs:
       - name: Log in to DockerHub
         run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
+      - name: Set IMAGE_TAG
+        run: echo "IMAGE_TAG=${GITHUB_REF##*/}" | sed 's/\//-/g' >> $GITHUB_ENV
+
       - name: Build and Push Batch Application Image
         env:
           IMAGE_NAME: eightpotatoes-batch-application
-          BRANCH_NAME: ${{ github.ref_name }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${IMAGE_NAME}:${BRANCH_NAME} -f ./Dockerfile .
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${IMAGE_NAME}:${BRANCH_NAME}}
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${IMAGE_NAME}:${IMAGE_TAG} -f ./Dockerfile .
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${IMAGE_NAME}:${IMAGE_TAG}}
 
       - name: Build and Push External API Application Image
         env:
           IMAGE_NAME: eightpotatoes-external-api-application
-          BRANCH_NAME: ${{ github.ref_name }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${IMAGE_NAME}:${BRANCH_NAME} -f ./Dockerfile .
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${IMAGE_NAME}:${BRANCH_NAME}}
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${IMAGE_NAME}:${IMAGE_TAG} -f ./Dockerfile .
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${IMAGE_NAME}:${IMAGE_TAG}}
 
       - name: Deploy to NCP server with SSH
         uses: appleboy/ssh-action@master
