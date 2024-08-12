@@ -53,8 +53,6 @@ jobs:
           password: ${{ secrets.NCP_PASSWORD }}
           port: ${{ secrets.NCP_PORT }}
           script: |
-            ls -al /docker/docker-compose
             docker-compose --version
-            docker-compose pull
-            docker-compose down || true
-            docker-compose up -d
+            docker compose pull
+            docker compose up -d
