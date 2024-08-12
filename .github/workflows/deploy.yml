@@ -36,7 +36,6 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${IMAGE_NAME}:${BRANCH_NAME} -f ./Dockerfile .
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${IMAGE_NAME}:${BRANCH_NAME}
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${IMAGE_NAME}:latest
 
       - name: Build and Push External API Application Image
         env:
@@ -45,7 +44,6 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${IMAGE_NAME}:${BRANCH_NAME} -f ./Dockerfile .
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${IMAGE_NAME}:${BRANCH_NAME}
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${IMAGE_NAME}:latest
 
       - name: Deploy to NCP server with SSH
         uses: appleboy/ssh-action@master
