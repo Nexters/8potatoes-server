@@ -45,11 +45,12 @@ class ReststopController(private val reststopExternalService: ReststopExternalSe
     ): Flux<ReststopsAtHighway> {
         val fromLocation = parseLocation(from)
         val toLocation = parseLocation(to)
-        val direction = determineDirection(fromLocation, toLocation)
-        val midPoint = calculateMidPoint(fromLocation, toLocation) // 중간 지점 계산
-        val middleZone = calculateMiddleZone(fromLocation, toLocation) // 중간 구역 계산(30%~70%)
-        val roadNameList = roadNames.split(",")
-        return reststopExternalService.getReststopsAtHighways(roadNameList, direction, midPoint, middleZone)
+        return reststopExternalService.getReststopsAtHighways(
+            roadNames.split(","),
+            determineDirection(fromLocation, toLocation),
+            calculateMidPoint(fromLocation, toLocation),
+            calculateMiddleZone(fromLocation, toLocation),
+        )
     }
 
     @Operation(
