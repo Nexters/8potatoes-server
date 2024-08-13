@@ -3,8 +3,10 @@ package com.eightpotatoes.nexters.api.external.controller
 import com.eightpotatoes.nexters.api.external.model.ReststopDetailResponse
 import com.eightpotatoes.nexters.api.external.model.ReststopsAtHighway
 import com.eightpotatoes.nexters.api.external.service.ReststopExternalService
+import com.eightpotatoes.nexters.core.util.LocationUtils.calculateMidPoint
+import com.eightpotatoes.nexters.core.util.LocationUtils.calculateMiddleZone
 import com.eightpotatoes.nexters.core.util.LocationUtils.determineDirection
-import com.eightpotatoes.nexters.core.util.LocationUtils.parseCoordinates
+import com.eightpotatoes.nexters.core.util.LocationUtils.parseLocation
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
@@ -34,22 +36,20 @@ class ReststopController(private val reststopExternalService: ReststopExternalSe
     )
     @GetMapping("/api/highways/reststops")
     fun getReststopsAtHighways(
-        @Parameter(
-            description = "Starting coordinate in 'lat,lon' format",
-            required = true,
-            example = "35.4888,129.091"
-        )
+        @Parameter(description = "출발지 좌표 'lat,lon'", required = true, example = "37.3171,127.0866")
         @RequestParam from: String,
-        @Parameter(description = "Ending coordinate in 'lat,lon' format", required = true, example = "36.1234,128.4567")
+        @Parameter(description = "도착지 좌표 'lat,lon'", required = true, example = "34.9564,127.58748")
         @RequestParam to: String,
-        @Parameter(description = "List of road names", required = true, example = "서해안선,영동선")
+        @Parameter(description = "노선 이름 List(구분자',')", required = true, example = "경부선,호남선,순천완주선")
         @RequestParam roadNames: String
     ): Flux<ReststopsAtHighway> {
-        val fromCoordinates = parseCoordinates(from)
-        val toCoordinates = parseCoordinates(to)
-        val direction = determineDirection(fromCoordinates, toCoordinates)
+        val fromLocation = parseLocation(from)
+        val toLocation = parseLocation(to)
+        val direction = determineDirection(fromLocation, toLocation)
+        val midPoint = calculateMidPoint(fromLocation, toLocation) // 중간 지점 계산
+        val middleZone = calculateMiddleZone(fromLocation, toLocation) // 중간 구역 계산(30%~70%)
         val roadNameList = roadNames.split(",")
-        return reststopExternalService.getReststopsAtHighways(roadNameList, direction)
+        return reststopExternalService.getReststopsAtHighways(roadNameList, direction, midPoint, middleZone)
     }
 
     @Operation(

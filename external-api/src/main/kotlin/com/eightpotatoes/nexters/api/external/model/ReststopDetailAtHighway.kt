@@ -1,5 +1,7 @@
 package com.eightpotatoes.nexters.api.external.model
 
+import com.eightpotatoes.nexters.core.model.Location
+
 data class ReststopDetailAtHighway(
     val name: String, // 휴게소 이름
     val code: String, // 휴게소 코드
@@ -9,4 +11,6 @@ data class ReststopDetailAtHighway(
     val lpgPrice: String?, // LPG 가격
     val naverRating: Float?, // 네이버 평점
     val foodMenusCount: Int, // 총 메뉴 개수
+    val location: Location, // 좌표
+    var isRecommend: Boolean, // 추천 휴게소 여부
 )

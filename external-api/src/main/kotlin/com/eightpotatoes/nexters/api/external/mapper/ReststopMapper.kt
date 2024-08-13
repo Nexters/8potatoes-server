@@ -4,6 +4,7 @@ import com.eightpotatoes.nexters.api.external.mapper.MenuMapper.buildReststopMen
 import com.eightpotatoes.nexters.api.external.model.*
 import com.eightpotatoes.nexters.core.entity.Menu
 import com.eightpotatoes.nexters.core.entity.Reststop
+import com.eightpotatoes.nexters.core.model.Location
 import com.eightpotatoes.nexters.core.util.ReststopUtils.isRestaurantOpen
 import com.eightpotatoes.nexters.core.util.TimeUtils.formatLocalDateTime
 import java.time.LocalDateTime
@@ -22,7 +23,9 @@ object ReststopMapper {
             dieselPrice = entity.dieselPrice,
             lpgPrice = entity.lpgPrice,
             naverRating = entity.naverRating,
-            foodMenusCount = foodMenusCount
+            foodMenusCount = foodMenusCount,
+            location = Location(entity.latitude, entity.longitude),
+            isRecommend = false,
         )
     }
 

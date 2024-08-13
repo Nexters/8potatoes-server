@@ -127,7 +127,7 @@ class ReststopService(
     }
 
     private fun generateRandomFloatInRange(): Float {
-        val start = 10
+        val start = 30
         val end = 50
         val randomValue = Random.nextInt(start, end + 1)
         return randomValue / 10.0f
