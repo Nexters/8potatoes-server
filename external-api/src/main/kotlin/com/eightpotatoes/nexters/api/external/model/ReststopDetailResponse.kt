@@ -2,6 +2,7 @@ package com.eightpotatoes.nexters.api.external.model
 
 data class ReststopDetailResponse(
     val name: String, // 휴게소 이름
+    val direction: String?, // 휴게소 방향
     val isOperating: Boolean, // 식당 운영중 여부
     val startTime: String?, // 식당 운영 시작 시간(07:00)
     val endTime: String?, // 식당 운영 종료 시간(23:30)

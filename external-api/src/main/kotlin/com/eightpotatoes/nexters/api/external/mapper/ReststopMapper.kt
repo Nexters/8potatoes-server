@@ -37,7 +37,8 @@ object ReststopMapper {
         amenities: List<AmenityData>,
     ): ReststopDetailResponse {
         return ReststopDetailResponse(
-            name = reststop.name,
+            name = extractReststopNameAndDirection(reststop.name).name,
+            direction = extractReststopNameAndDirection(reststop.name).direction,
             isOperating = isRestaurantOpen(reststop.restaurantOpenTime ?: "00:00 ~ 23:59"),
             startTime = reststop.restaurantOpenTime?.split(" ~ ")?.get(0),
             endTime = reststop.restaurantOpenTime?.split(" ~ ")?.get(1),
