@@ -20,6 +20,7 @@ class ReststopExternalService(
     private val convenientFacilityRepository: ConvenientFacilityRepository,
 ) {
     fun getReststopsAtHighways(
+        fromLocation: Location,
         roadNameList: List<String>,
         direction: String,
         midPoint: Location,
@@ -33,14 +34,14 @@ class ReststopExternalService(
                 foodMenusCount = menuRepository.findByReststopCode(it.standardCode).size,
             )
         }
-        val sortedReststops = sortReststopsByProximity(reststopDetailAtHighwayList, midPoint)
+        val sortedReststops = sortReststopsByProximity(reststopDetailAtHighwayList, fromLocation)
         val filteredReststops = filterReststopsInMiddleZone(sortedReststops, middleZone)
         val recommendReststop = calculateScoreAndRecommendReststop(filteredReststops, midPoint)
 
-        reststopDetailAtHighwayList.forEach {
+        sortedReststops.forEach {
             it.isRecommend = it.code == recommendReststop?.code
         }
-        return Flux.just(ReststopsAtHighway(reststopList.size, reststopDetailAtHighwayList))
+        return Flux.just(ReststopsAtHighway(reststopList.size, sortedReststops))
     }
 
     fun getReststopInfo(reststopCode: String): Flux<ReststopDetailResponse> {

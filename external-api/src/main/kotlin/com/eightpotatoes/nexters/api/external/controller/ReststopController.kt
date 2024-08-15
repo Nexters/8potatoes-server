@@ -46,10 +46,11 @@ class ReststopController(private val reststopExternalService: ReststopExternalSe
         val fromLocation = parseLocation(from)
         val toLocation = parseLocation(to)
         return reststopExternalService.getReststopsAtHighways(
-            roadNames.split(","),
-            determineDirection(fromLocation, toLocation),
-            calculateMidPoint(fromLocation, toLocation),
-            calculateMiddleZone(fromLocation, toLocation),
+            fromLocation = fromLocation,
+            roadNameList = roadNames.split(","),
+            direction = determineDirection(fromLocation, toLocation),
+            midPoint = calculateMidPoint(fromLocation, toLocation),
+            middleZone = calculateMiddleZone(fromLocation, toLocation),
         )
     }
 
