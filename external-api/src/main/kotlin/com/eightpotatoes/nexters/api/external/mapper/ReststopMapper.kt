@@ -16,7 +16,8 @@ object ReststopMapper {
         foodMenusCount: Int
     ): ReststopDetailAtHighway {
         return ReststopDetailAtHighway(
-            name = entity.name,
+            name = extractReststopNameAndDirection(entity.name).name,
+            direction = extractReststopNameAndDirection(entity.name).direction,
             code = entity.standardCode,
             isOperating = isOperating,
             gasolinePrice = entity.gasolinePrice,
@@ -79,4 +80,17 @@ object ReststopMapper {
             )
         )
     }
+
+    private fun extractReststopNameAndDirection(name: String): ReststopNameAndDirection {
+        val regex = Regex("\\(([^)]+)\\)")
+        val matchResult = regex.find(name)
+        val reststopName = name.replace(regex, "").trim()
+        val direction = matchResult?.groupValues?.get(1) ?: null
+        return ReststopNameAndDirection(reststopName, direction)
+    }
 }
+
+data class ReststopNameAndDirection(
+    val name: String,
+    val direction: String?,
+)

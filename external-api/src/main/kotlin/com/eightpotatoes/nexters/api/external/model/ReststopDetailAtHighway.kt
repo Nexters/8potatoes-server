@@ -4,6 +4,7 @@ import com.eightpotatoes.nexters.core.model.Location
 
 data class ReststopDetailAtHighway(
     val name: String, // 휴게소 이름
+    val direction: String?, // 방면
     val code: String, // 휴게소 코드
     val isOperating: Boolean, // 운영중
     val gasolinePrice: String?, // 휘발유 가격

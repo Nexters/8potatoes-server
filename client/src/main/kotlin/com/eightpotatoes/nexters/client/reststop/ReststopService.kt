@@ -32,8 +32,7 @@ class ReststopService(
         val baselineMap = reststopBaselineList.associateBy { it.name }
         val additionalMap = reststopAdditionalList.associateBy { it.name }
         val parkingLotMap = parkingLotList.associateBy { it.reststopName + "휴게소" }
-        val oilPriceMap =
-            reststopOilPriceList.associateBy { ReststopUtils.processGasStationName(it.serviceAreaName ?: "") }
+        val oilPriceMap = reststopOilPriceList.associateBy { ReststopUtils.processGasStationName(it.serviceAreaName ?: "") }
         val chargingStationMap = chargingStationList.associateBy { it.facilityName + it.facilityType }
 
         standardDataMap.mapNotNull { (name, standardData) ->
@@ -55,7 +54,7 @@ class ReststopService(
 
                 val reststop = Reststop(
                     name = processedName,
-                    roadRouteNo = additional?.routeCd ?: baseline?.routeCode ?: "Unknown",
+                    roadRouteNo = (additional?.routeCd ?: baseline?.routeCode ?: "Unknown-").dropLast(1),
                     roadRouteName = standardData.roadRouteName ?: "Unknown",
                     roadRouteDirection = standardData.roadRouteDirection ?: "Unknown",
                     latitude = standardData.latitude?.toFloatOrNull() ?: 0f,
@@ -71,9 +70,9 @@ class ReststopService(
                     largeCarSpace = parkingLot?.largeCarSpace,
                     disabledPersonSpace = parkingLot?.disabledPersonSpace,
                     totalSpace = parkingLot?.totalSpace,
-                    gasolinePrice = oilPrice?.gasolinePrice,
-                    dieselPrice = oilPrice?.dieselPrice,
-                    lpgPrice = oilPrice?.lpgPrice,
+                    gasolinePrice = oilPrice?.gasolinePrice.toNullIfX(),
+                    dieselPrice = oilPrice?.dieselPrice.toNullIfX(),
+                    lpgPrice = oilPrice?.lpgPrice.toNullIfX(),
                     hasElectricCharger = chargingStation?.electricChargingStation == "O",
                     hasHydrogenCharger = chargingStation?.hydrogenChargingStation == "O"
                 )
@@ -143,5 +142,7 @@ class ReststopService(
         }
     }
 
-
+    fun String?.toNullIfX(): String? {
+        return if (this == "X") null else this
+    }
 }

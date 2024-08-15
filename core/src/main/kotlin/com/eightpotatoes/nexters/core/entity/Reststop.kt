@@ -4,7 +4,7 @@ import jakarta.persistence.*
 
 @Table(name = "reststop")
 @Entity
-class Reststop(
+open class Reststop(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

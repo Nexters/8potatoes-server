@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 @RestController
 @Tag(name = "휴게소 데이터 관련 API", description = "휴게소 관련 데이터를 조회할 수 있습니다.")
@@ -71,7 +72,7 @@ class ReststopController(private val reststopExternalService: ReststopExternalSe
     fun getReststopInfo(
         @Parameter(description = "Reststop Code", required = true, example = "000013")
         @RequestParam reststopCode: String
-    ): Flux<ReststopDetailResponse> {
+    ): Mono<ReststopDetailResponse> {
         return reststopExternalService.getReststopInfo(reststopCode)
     }
 }

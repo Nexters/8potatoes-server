@@ -7,6 +7,7 @@ import com.eightpotatoes.nexters.core.repository.*
 import com.eightpotatoes.nexters.core.util.ReststopUtils.isRestaurantOpen
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -44,7 +45,7 @@ class ReststopExternalService(
         return Flux.just(ReststopsAtHighway(reststopList.size, sortedReststops))
     }
 
-    fun getReststopInfo(reststopCode: String): Flux<ReststopDetailResponse> {
+    fun getReststopInfo(reststopCode: String): Mono<ReststopDetailResponse> {
         val reststop = reststopRepository.findByStandardCode(reststopCode)
             ?: throw IllegalArgumentException("Reststop not found")
         val menus = menuRepository.findByReststopCode(reststopCode)
@@ -61,7 +62,7 @@ class ReststopExternalService(
             )
         }
 
-        return Flux.just(ReststopMapper.toReststopDetailResponse(reststop, menus, brands, amenities))
+        return Mono.just(ReststopMapper.toReststopDetailResponse(reststop, menus, brands, amenities))
     }
 
     // 노선과 휴게소 위치 기준 : 경로 내 휴게소 필터링(중간 휴게소 찾기)
