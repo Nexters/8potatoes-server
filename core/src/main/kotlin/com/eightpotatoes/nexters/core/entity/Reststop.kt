@@ -4,7 +4,7 @@ import jakarta.persistence.*
 
 @Table(name = "reststop")
 @Entity
-open class Reststop(
+class Reststop(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -12,8 +12,8 @@ open class Reststop(
     var roadRouteNo: String, // 0010
     var roadRouteName: String, // 경부선
     var roadRouteDirection: String, // 상행,하행
-    var latitude: Float, // yValue 위도(37.459939)
-    var longitude: Float, // xValue 경도(127.042514)
+    var latitude: Double, // yValue 위도(37.459939)
+    var longitude: Double, // xValue 경도(127.042514)
     var phoneNumber: String, // 전화번호
     var referenceDate: String, // 데이터기준일자
     var representativeFoodName: String, // 대표음식명
