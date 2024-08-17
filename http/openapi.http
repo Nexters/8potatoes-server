@@ -12,3 +12,6 @@ POST http://localhost:8081/batch/reststop/foods
 
 ### 4) 브랜드 데이터 Upsert(w/OpenAPI)
 POST http://localhost:8081/batch/brands/info
+
+### 5) 휴게소 편의시설 데이터 Upsert(w/OpenAPI)
+POST http://localhost:8081/batch/convenient-facilities/info
