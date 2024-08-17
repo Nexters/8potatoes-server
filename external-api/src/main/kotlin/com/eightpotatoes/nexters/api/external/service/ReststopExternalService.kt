@@ -2,16 +2,14 @@ package com.eightpotatoes.nexters.api.external.service
 
 import com.eightpotatoes.nexters.api.external.mapper.ReststopMapper
 import com.eightpotatoes.nexters.api.external.model.*
+import com.eightpotatoes.nexters.core.entity.Reststop
 import com.eightpotatoes.nexters.core.model.Location
 import com.eightpotatoes.nexters.core.repository.*
+import com.eightpotatoes.nexters.core.util.LocationUtils.calculateDistance
 import com.eightpotatoes.nexters.core.util.ReststopUtils.isRestaurantOpen
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
 
 @Service
 class ReststopExternalService(
@@ -22,13 +20,30 @@ class ReststopExternalService(
 ) {
     fun getReststopsAtHighways(
         fromLocation: Location,
-        roadNameList: List<String>,
+        highwayRequest: HighwayRequest,
         direction: String,
         midPoint: Location,
         middleZone: Pair<Location, Location>,
     ): Flux<ReststopsAtHighway> {
-        val reststopList = reststopRepository.findByRoadRouteNameAndDirection(roadNameList, direction)
-        val reststopDetailAtHighwayList = reststopList.map {
+        val reststopList = reststopRepository.findByDirection(direction)
+        val boundingBoxes = mutableListOf<BoundingBox>()
+        highwayRequest.highways.forEach { (_, highwaySectionList) ->
+            highwaySectionList.forEach {
+                require(it.size == 4) { "Highway section must have 4 coordinates" }
+                val convertToBoundingBox = convertToBoundingBox(
+                    it.map { coordinates ->
+                        Location(
+                            longitude = coordinates[0],
+                            latitude = coordinates[1]
+                        )
+                    }
+                )
+                boundingBoxes.add(convertToBoundingBox)
+            }
+        }
+        val filteredReststop = filterReststopsInBoundingBox(reststopList, boundingBoxes)
+
+        val reststopDetailAtHighwayList = filteredReststop.map {
             ReststopMapper.toReststopsAtHighway(
                 entity = it,
                 isOperating = isRestaurantOpen(it.restaurantOpenTime ?: "00:00 ~ 23:59"),
@@ -42,7 +57,7 @@ class ReststopExternalService(
         sortedReststops.forEach {
             it.isRecommend = it.code == recommendReststop?.code
         }
-        return Flux.just(ReststopsAtHighway(reststopList.size, sortedReststops))
+        return Flux.just(ReststopsAtHighway(sortedReststops.size, sortedReststops))
     }
 
     fun getReststopInfo(reststopCode: String): Mono<ReststopDetailResponse> {
@@ -87,7 +102,7 @@ class ReststopExternalService(
     ): ReststopDetailAtHighway? {
         val ratingWeight = 0.6
         val locationWeight = 0.4
-        val maxDistance = 100.0
+        val maxDistance = 200.0
 
         return reststops.maxByOrNull { reststop ->
             val distanceToMidPoint = calculateDistance(midPoint, reststop.location)
@@ -98,20 +113,6 @@ class ReststopExternalService(
         }
     }
 
-    fun calculateDistance(location1: Location, location2: Location): Double {
-        val radius = 6371e3 // 지구 반지름(미터)
-        val φ1 = Math.toRadians(location1.latitude.toDouble())
-        val φ2 = Math.toRadians(location2.latitude.toDouble())
-        val Δφ = Math.toRadians((location2.latitude - location1.latitude).toDouble())
-        val Δλ = Math.toRadians((location2.longitude - location1.longitude).toDouble())
-
-        val a = sin(Δφ / 2) * sin(Δφ / 2) +
-                cos(φ1) * cos(φ2) *
-                sin(Δλ / 2) * sin(Δλ / 2)
-        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-        return radius * c / 1000 // 거리(km)
-    }
 
     // 휴게소를 출발지에서 가까운 순으로 정렬
     fun sortReststopsByProximity(
@@ -121,4 +122,19 @@ class ReststopExternalService(
         reststops.sortedBy { reststop ->
             calculateDistance(fromLocation, reststop.location)
         }
+
+    // Convert highway coordinates to BoundingBox
+    private fun convertToBoundingBox(coords: List<Location>): BoundingBox {
+        return BoundingBox(coords[0], coords[1], coords[2], coords[3])
+    }
+
+    // Filter reststops inside bounding boxes
+    private fun filterReststopsInBoundingBox(
+        reststops: List<Reststop>,
+        boundingBoxes: List<BoundingBox>,
+    ): List<Reststop> {
+        return reststops.filter { reststop ->
+            boundingBoxes.any { it.contains(Location(reststop.latitude, reststop.longitude)) }
+        }
+    }
 }

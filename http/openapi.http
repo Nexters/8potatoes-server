@@ -1,14 +1,14 @@
 ### 0) 휴게소 데이터 Test import(w/OpenAPI)
-POST http://localhost:8097/batch/reststops/info
+POST http://localhost:8081/batch/reststops/info
 
 ### 1) 휴게소 Naver 평점 정보 업데이트
-POST http://localhost:8097/batch/reststops/rating
+POST http://localhost:8081/batch/reststops/rating
 
 ### 2) 휴게소 식당 영업시간 정보 업데이트
-POST http://localhost:8097/batch/reststops/restaurants-hours
+POST http://localhost:8081/batch/reststops/restaurants-hours
 
 ### 3) 휴게소 메뉴 데이터 Upsert(w/OpenAPI)
-POST http://localhost:8097/batch/reststop/foods
+POST http://localhost:8081/batch/reststop/foods
 
 ### 4) 브랜드 데이터 Upsert(w/OpenAPI)
-POST http://localhost:8097/batch/brands/info
+POST http://localhost:8081/batch/brands/info

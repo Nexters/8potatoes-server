@@ -10,9 +10,8 @@ import org.springframework.stereotype.Repository
 interface ReststopRepository : JpaRepository<Reststop, Long> {
     fun findByStandardCode(standardCode: String): Reststop?
 
-    @Query("SELECT r FROM Reststop r WHERE r.roadRouteName IN :roadNameList AND (r.roadRouteDirection = :direction OR r.roadRouteDirection = '양방향')")
-    fun findByRoadRouteNameAndDirection(
-        @Param("roadNameList") roadNameList: List<String>,
+    @Query("SELECT r FROM Reststop r WHERE (r.roadRouteDirection = :direction OR r.roadRouteDirection = '양방향')")
+    fun findByDirection(
         @Param("direction") direction: String
     ): List<Reststop>
 }
