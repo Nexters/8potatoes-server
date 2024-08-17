@@ -12,7 +12,7 @@ class Menu(
     val foodSeq: String,
     val name: String,
     val price: Int,
-    val description: String?,
+    var description: String?,
     val isRecommended: Boolean,
     val isPremium: Boolean,
     val isBestFood: Boolean,

@@ -1,6 +1,8 @@
 package com.eightpotatoes.nexters.client.menu
 
 import com.eightpotatoes.nexters.client.menu.response.ReststopFoodResponse
+import com.eightpotatoes.nexters.client.model.ReststopRecommendMenuData
+import com.eightpotatoes.nexters.core.entity.Menu
 import com.eightpotatoes.nexters.core.util.MenuUtils.getCategoryByName
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
@@ -32,6 +34,7 @@ class ReststopFoodService(
                     try {
                         // menu 이름을 통해 카테고리 업데이트
                         menu.category = getCategoryByName(menu.name)
+                        updateMenuDescription(menu)
                         menuService.upsertMenu(menu)
                     } catch (e: Exception) {
                         // Log error and handle it appropriately
@@ -60,5 +63,16 @@ class ReststopFoodService(
             .retrieve()
             .bodyToMono(ReststopFoodResponse::class.java)
             .awaitSingle()
+    }
+
+    // 휴게소 대표 추천 메뉴의 설명을 업데이트
+    private fun updateMenuDescription(menu: Menu) {
+        val matchingMenu = ReststopRecommendMenuData.menuList.find {
+            it.standardCode == menu.reststopCode && it.foodName == menu.name
+        }
+
+        matchingMenu?.let {
+            menu.description = it.description
+        }
     }
 }
