@@ -17,5 +17,12 @@ class SwaggerConfig {
                     .description("휴게소 정보를 제공하는 API")
                     .version("1.0.0")
             )
+            .servers(
+                listOf(
+                    io.swagger.v3.oas.models.servers.Server().url("http://localhost:8082"),
+                    io.swagger.v3.oas.models.servers.Server().url("http://175.45.205.16:8082"),
+                    io.swagger.v3.oas.models.servers.Server().url("https://server-hyusik-matju.site")
+                )
+            )
     }
 }
