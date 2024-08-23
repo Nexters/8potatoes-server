@@ -17,13 +17,14 @@ data class ConvenientFacilityOrigin(
     private val routeCd: String? = null,
     private val routeNm: String? = null,
     private val psCode: String? = null,
-    private val psName: String? = null,
+    val psName: String? = null,
     private val psDesc: String? = null,
 
     ) {
 
-    fun toConvenientFacility(): ConvenientFacility {
+    fun toConvenientFacility(imageUrl: String): ConvenientFacility {
         return ConvenientFacility(
+            imageUrl = imageUrl,
             standardCode = stdRestCd ?: "",
             name = psName ?: "",
             code = psCode ?: "",

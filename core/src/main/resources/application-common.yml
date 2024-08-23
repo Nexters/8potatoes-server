@@ -16,3 +16,16 @@ api:
   base:
     url: http://data.ex.co.kr
   key: 3951846914
+cloud:
+  aws:
+    credentials:
+      accessKey: ${NCP_ACCESS_KEY}
+      secretKey: ${NCP_SECRET_KEY}
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2 # kr-standard
+    s3:
+      endpoint: https://kr.object.ncloudstorage.com
+      bucket: "8potatoes"
+

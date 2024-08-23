@@ -1,7 +1,7 @@
 package com.eightpotatoes.nexters.client.convenient
 
+import com.eightpotatoes.nexters.client.convenient.response.ConvenientFacilityOrigin
 import com.eightpotatoes.nexters.client.convenient.response.ConvenientFacilityOrigins
-import com.eightpotatoes.nexters.core.entity.ConvenientFacility
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.scheduler.Schedulers
@@ -10,9 +10,9 @@ import java.util.Collections.emptyList
 @Component
 class ConvenientFacilityClient(val webClient: WebClient) {
 
-    fun fullImportConvenientFacilities(): List<ConvenientFacility> {
+    fun fullImportConvenientFacilities(): List<ConvenientFacilityOrigin> {
         var pageNo = 0
-        val convenientFacilities = mutableListOf<ConvenientFacility>()
+        val convenientFacilities = mutableListOf<ConvenientFacilityOrigin>()
 
         while (true) {
             val result = webClient.get()
@@ -29,7 +29,7 @@ class ConvenientFacilityClient(val webClient: WebClient) {
                     .subscribeOn(Schedulers.boundedElastic())
                     .block()
 
-            val responses: List<ConvenientFacility> = result?.list?.map { item -> item.toConvenientFacility() } ?: emptyList()
+            val responses: List<ConvenientFacilityOrigin> = result?.list ?: emptyList()
 
             if (responses.isEmpty()) {
                 break
