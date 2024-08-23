@@ -8,7 +8,7 @@ data class BrandOrigin(
     private val stdRestCd: String? = null,
     private val stdRestNm: String? = null,
     private val brdCode: String? = null,
-    private val brdName: String? = null,
+    val brdName: String? = null,
     private val brdDesc: String? = null,
     private val stime: String? = null,
     private val etime: String? = null,
@@ -20,7 +20,7 @@ data class BrandOrigin(
     private val routeCd: String? = null,
     private val routeNm: String? = null) {
 
-    fun toBrand(): Brand {
+    fun toBrand(thumbnailUrl: String?): Brand {
         return Brand(
                 brandCode = brdCode ?: "",
                 name = brdName ?: "",
@@ -29,7 +29,7 @@ data class BrandOrigin(
                 reststopName = stdRestNm ?: "",
                 routeName = routeNm ?: "",
                 address = svarAddr ?: "",
-                thumbnailUrl = ""
+                thumbnailUrl = thumbnailUrl ?: ""
         )
     }
 }
