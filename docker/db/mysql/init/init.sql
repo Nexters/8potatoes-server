@@ -78,6 +78,7 @@ CREATE TABLE reststop
 CREATE TABLE convenient_facility
 (
     id            BIGINT AUTO_INCREMENT PRIMARY KEY,
+    image_url VARCHAR(255) COMMENT '편의시설 이미지',
     standard_code VARCHAR(255) NOT NULL COMMENT '표준 휴게소/주유소 공통 코드',
     name          VARCHAR(255) NOT NULL,
     code          VARCHAR(255) NOT NULL,

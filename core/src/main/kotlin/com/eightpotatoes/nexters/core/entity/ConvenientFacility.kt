@@ -12,6 +12,7 @@ class ConvenientFacility(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
+    val imageUrl: String? = null,
     val standardCode: String,
     val name: String,
     val code: String,

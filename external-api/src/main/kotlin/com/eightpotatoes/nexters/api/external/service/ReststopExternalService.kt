@@ -73,7 +73,7 @@ class ReststopExternalService(
         val amenities = convenientFacilityRepository.findByStandardCode(reststopCode).map {
             AmenityData(
                 amenityName = it.name,
-                amenityLogoUrl = "TEST", // TODO 편의시설 image 링크 추가
+                amenityLogoUrl = it.imageUrl?: ""
             )
         }
 
