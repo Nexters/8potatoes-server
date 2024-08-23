@@ -4,6 +4,7 @@ import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.web.filter.ForwardedHeaderFilter
 
 
 @Configuration
@@ -24,5 +25,10 @@ class SwaggerConfig {
                     io.swagger.v3.oas.models.servers.Server().url("https://server-hyusik-matju.site")
                 )
             )
+    }
+
+    @Bean
+    fun forwardedHeaderFilter(): ForwardedHeaderFilter {
+        return ForwardedHeaderFilter()
     }
 }
