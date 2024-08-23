@@ -7,6 +7,7 @@ import com.eightpotatoes.nexters.core.model.Location
 import com.eightpotatoes.nexters.core.repository.*
 import com.eightpotatoes.nexters.core.util.LocationUtils.calculateDistance
 import com.eightpotatoes.nexters.core.util.ReststopUtils.isRestaurantOpen
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -18,6 +19,13 @@ class ReststopExternalService(
     private val brandRepository: BrandRepository,
     private val convenientFacilityRepository: ConvenientFacilityRepository,
 ) {
+
+    @Value("\${cloud.aws.s3.bucket}")
+    private val bucket: String? = null
+
+    @Value("\${cloud.aws.s3.endpoint}")
+    private val baseUrl: String? = null
+
     fun getReststopsAtHighways(
         fromLocation: Location,
         highwayRequest: HighwayRequest,
@@ -77,7 +85,15 @@ class ReststopExternalService(
             )
         }
 
-        return Mono.just(ReststopMapper.toReststopDetailResponse(reststop, menus, brands, amenities))
+        return Mono.just(
+            ReststopMapper.toReststopDetailResponse(
+                reststop = reststop,
+                menus = menus,
+                brands = brands,
+                amenities = amenities,
+                baseUrl = "$baseUrl/$bucket",
+            )
+        )
     }
 
     // 노선과 휴게소 위치 기준 : 경로 내 휴게소 필터링(중간 휴게소 찾기)

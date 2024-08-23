@@ -35,6 +35,7 @@ object ReststopMapper {
         menus: List<Menu>,
         brands: List<BrandData>,
         amenities: List<AmenityData>,
+        baseUrl: String,
     ): ReststopDetailResponse {
         return ReststopDetailResponse(
             name = extractReststopNameAndDirection(reststop.name).name,
@@ -64,7 +65,7 @@ object ReststopMapper {
                 address = reststop.address ?: "",
                 phoneNumber = reststop.phoneNumber,
             ),
-            menuData = buildReststopMenuData(menus)
+            menuData = buildReststopMenuData(menus, baseUrl)
         )
     }
 

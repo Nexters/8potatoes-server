@@ -7,7 +7,10 @@ import com.eightpotatoes.nexters.core.entity.Menu
 
 object MenuMapper {
     // 변환 함수
-    fun buildReststopMenuData(menus: List<Menu>): ReststopMenuData {
+    fun buildReststopMenuData(
+        menus: List<Menu>,
+        baseUrl: String,
+    ): ReststopMenuData {
         // 대표 메뉴 데이터 (bestfood, premium, recommend 모두 true인 경우)
         val representativeMenuData = menus
             .filter { it.isBestFood && it.isPremium && it.isRecommended }
@@ -16,7 +19,7 @@ object MenuMapper {
                 RepresentativeMenuData(
                     representativeMenuName = it.name,
                     representativeMenuPrice = it.price,
-                    representativeMenuImageUrl = "https://github.com/user-attachments/assets/d117754e-92d2-4156-92e7-a2721216c17a", // TODO 실제 이미지 URL 필요
+                    representativeMenuImageUrl = "$baseUrl/menu/${it.name}.svg",
                     representativeMenuDescription = it.description ?: ""
                 )
             }
