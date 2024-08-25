@@ -18,6 +18,7 @@ services:
     volumes:
       - ./db/mysql/init:/docker-entrypoint-initdb.d
       - mysql_data:/var/lib/mysql
+      - ./config/mysql/my.cnf:/etc/mysql/my.cnf
 
   batch-application:
     container_name: eightpotatoes-batch-application
