@@ -32,9 +32,10 @@ class ReststopFoodService(
             response.list.map { item -> item.toMenu() }.forEach { menu ->
                 jobs += launch {
                     try {
-                        // menu 이름을 통해 카테고리 업데이트
                         menu.category = getCategoryByName(menu.name)
-                        updateMenuDescription(menu)
+                        if (menu.isBestFood && menu.isPremium && menu.isRecommended) {
+                            updateMenuDescription(menu)
+                        }
                         menuService.upsertMenu(menu)
                     } catch (e: Exception) {
                         // Log error and handle it appropriately
